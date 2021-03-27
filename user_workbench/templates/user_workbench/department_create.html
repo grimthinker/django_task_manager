@@ -1,0 +1,41 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Department creation
+{% endblock %}
+
+{% block content %}
+
+  <h1 class="mb-5">Создание нового подразделения</h1>
+  <form class="mb-1" action="{% url 'department_create_url' %}" method="post">
+      {% csrf_token %}
+    <div class="container">
+    <div class="row">
+      <div class="col">
+        <p class="mb-2">Название:</p>
+        <p class="mb-4">{{ form.name }}</p>
+        <p class="mb-2">Описание:</p>
+        <p class="mb-4">{{ form.body }}</p>
+        <button type="submit" class="btn btn-primary">Создать подразделение</button>
+      </div>
+      <div class="col">
+        <p class="mb-2">Глава отделения:</p>
+        {% if current_user.user.is_staff %}
+          {{ form.chief }}
+        {% else %}
+          <p class="form-control">{{ current_user }}</p>
+          <input name="chief" value="{{ current_user.id }}" hidden>
+        {% endif %}
+        <p class="mb-2 mt-4">Работники (удерживать Ctrl чтобы выбрать нескольких):</p>
+        <p class="mb-4">{{ form.workers }}</p>
+        <p class="mb-2">Является частью подразделения (необязательно):</p>
+        <p class="mb-4">{{ form.super_department }}</p>
+
+  </form>
+
+
+
+    </div>
+  </div>
+</div>
+{% endblock %}

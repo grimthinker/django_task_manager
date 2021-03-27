@@ -1,0 +1,54 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block content %}
+<h3 class="mb-5">Создание нового пользователя</h3>
+<form class="mb-5" action="{% url 'register_page_url' %}" method="post">
+  {% csrf_token %}
+
+  <div class="form-group mb-3">
+    {% if form.username.errors %}
+      <div class="alert alert-danger">
+        {{ form.username.errors }}
+      </div>
+    {% endif %}
+    Логин {{form.username}}
+  </div>
+
+  {% for field in form_2 %}
+    <div class="form-group mb-3">
+      {% if field.errors %}
+        <div class="alert alert-danger">
+          {{ field.errors }}
+        </div>
+      {% endif %}
+      {{field.label}} {{field}}
+    </div>
+  {% endfor %}
+
+  <div class="form-group mb-3">
+    {% if form.password1.errors %}
+      <div class="alert alert-danger">
+        {{ form.password1.errors }}
+      </div>
+    {% endif %}
+    Пароль {{form.password1}}
+  </div>
+
+  <div class="form-group mb-3">
+    {% if form.password2.errors %}
+      <div class="alert alert-danger">
+        {{ form.password2.errors }}
+      </div>
+    {% endif %}
+    Подтверждение пароля {{ form.password2 }}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Создать пользователя</button>
+</form>
+
+<div class="mt-4">
+  <div>
+    Уже есть аккаунт? <a href="{% url 'login_page_url' %}" class="ml-2">Войти</a>
+  </div>
+</div>
+{% endblock %}

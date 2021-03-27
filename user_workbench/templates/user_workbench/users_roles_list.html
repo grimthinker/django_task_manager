@@ -1,0 +1,14 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Users list
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5">Список ролей пользователей в базе данных</h2>
+  {% for role in roles %}
+    <a href="{{ user.get_absolute_url }}">
+      {{role.name}} - {{role.body}}
+    </a>
+  {% endfor %}
+{% endblock %}

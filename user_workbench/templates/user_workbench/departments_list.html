@@ -1,0 +1,22 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Departments list
+{% endblock %}
+
+{% block content %}
+  <h3 class="mb-4">Список отделений</h3>
+  {% for department in departments %}
+  <li>
+    <a href="{{ department.get_absolute_url }}">
+      {{department}}
+    </a>
+  </li>
+    
+  {% endfor %}
+  <p><a href="{% url 'department_create_url' %}"></a></p>
+  <form class="mb-5" action="{% url 'department_create_url' %}">
+    <button type="submit" class="btn btn-primary">Создать новое</button>
+  </form>
+
+{% endblock %}

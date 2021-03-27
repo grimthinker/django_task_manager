@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<ul class="navbar-nav align-items-start">
+  <a class="navbar-brand" href="{% url 'user_workbench_url' pagetype='at' %}">Полученные задачи</a>
+  <a class="navbar-brand" href="{% url 'user_workbench_url' pagetype='ct' %}">Созданные задачи</a>
+  {% if current_user.chief or current_user.user.is_staff %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'user_workbench_url' pagetype='all' %}?search_by_status=all">Все задачи</a>
+  </li>
+  {% endif %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'user_messages_url' %}">Сообщения</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'user_reminders_url' %}">Напоминания</a>
+  </li>
+  {% if current_user.chief or current_user.user.is_staff %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'users_list_url' %}">Работники</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'departments_url' %}">Отделения</a>
+  </li>
+  {% endif %}
+</ul>
+<ul class="navbar-nav align-items-end">
+
+  <li class="nav-item"><a class="nav-link" href="{{ current_user.get_absolute_url }}">Пользователь: {{request.user}}</a></li>
+  <li class="nav-item"><a class='nav-link' href="{% url 'logout_user_url' %}">Выйти</a></li>
+
+</ul>
+{% endblock %}
+
+{% block content %}
+  <h1 class="mb-5">Это базовая заготовка страницы</h1>
+{% endblock %}

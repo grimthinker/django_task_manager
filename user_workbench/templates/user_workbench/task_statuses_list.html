@@ -1,0 +1,17 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Statuses list
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">Список вариантов статусов выполнения задачи</h2>
+  {% for status in statuses %}
+    <p class="mb-3">
+      {{status.name}} - {{status.body}}
+    </p>
+  {% endfor %}
+  <form action="{% url 'task_status_create_url' %}">
+    <button>Создать новый статус</button>
+  </form>
+{% endblock %}

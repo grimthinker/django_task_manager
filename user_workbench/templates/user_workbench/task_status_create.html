@@ -1,0 +1,32 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Status Create
+{% endblock %}
+
+{% block content %}
+  <h3 class="mb-5">Создание нового статуса для задач</h3>
+  <form class="mb-5" action="{% url 'task_status_create_url' %}" method="post">
+    {% csrf_token %}
+
+
+    {% for field in form %}
+      <div class="form-group">
+        {% if field.errors %}
+          <div class="alert alert-danger">
+            {{ field.errors }}
+          </div>
+        {% endif %}
+        {{field.label}}
+        {{field}}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Создать статус</button>
+  </form>
+
+
+  <form action="{% url 'task_statuses_url' %}">
+    <button>Список статусов</button>
+  </form>
+{% endblock %}

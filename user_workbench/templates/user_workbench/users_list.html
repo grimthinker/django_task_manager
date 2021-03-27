@@ -1,0 +1,16 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Users list
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5">Список пользователей в базе данных</h2>
+  {% for profile in profiles %}
+    <p>
+      <a href="{{ profile.get_absolute_url }}">
+        {{profile.user.username}} {{profile.name}} {{profile.second_name}} {{profile.middle_name}}
+      </a>
+    </p>
+  {% endfor %}
+{% endblock %}

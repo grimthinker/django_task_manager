@@ -1,0 +1,10 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Role {{ role.name }} detail
+{% endblock %}
+
+{% block content %}
+  <h1 class="mb-5">Описание роли {{ role.name }}</h1>
+  <p>{role.body}}</p>
+{% endblock %}

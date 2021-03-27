@@ -1,0 +1,120 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  New task creation
+{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">Создание новой задачи</h3>
+<form class="mb-1" action="{% url 'task_create_url' %}" method="post">
+  {% csrf_token %}
+  <div class="container-fluid mb-4">
+    <div class="row">
+      <div class="col-5">
+        <p class="mb-1">Автор задачи:</p>
+        <span class="mb-2"><a href="{{ userprofile.get_absolute_url }}">{{ userprofile }}</a></span>
+      </div>
+      <div class="col-1">
+      </div>
+      <div class="col-6">
+        {% if super_task %}
+        <p class="mb-1">Будет подзадачей к задаче:</p>
+        <span class="mb-5"><a href="{{ super_task.get_absolute_url }}">{{ super_task }} </a></span>
+        <input type="hidden" name="id" value="{{super_task.id}}">
+        {% else %}
+        <p class="mb-1">Не является подзадачей</p>
+        <input type="hidden" name="id" value="0">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-5">
+        <p class="mb-2">Наименование:</p>
+        <p class="mb-4">{{ form.name }}</p>
+
+        <p class="mb-1">Ответственный за выполнение:</p>
+        <p class="mb-3">{{ form.responsible_users }}</p>
+      </div>
+      <div class="col-1">
+      </div>
+      <div class="col-6">
+        <p class="mb-2">Описание задачи (необязательно):</p>
+        <p class="mb-5">{{ form.body }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5">
+        <p class="mb-1">Обоснование:</p>
+        <p class="mb-3">{{ form.justification }}</p>
+        <p class="mb-1">Комментарий:</p>
+        <p class="mb-5">{{ form.comment }}</p>
+
+        <button type="submit" class="btn btn-primary">Создать задачу</button>
+      </div>
+      <div class="col-1">
+      </div>
+      <div class="col-6">
+        <p class="mb-2">Срок выполнения:</p>
+        <p>{{ form.deadline }}</p>
+      </div>
+    </div>
+  </div>
+</form>
+{% if messages %}
+<div class="alert alert-warning">
+<div class="container text-center">
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+{% for field in form %}
+{% if form.field.errors %}
+<div class="alert alert-danger">
+  {{ form.field.errors }}
+</div>
+{% endif %}
+{% endfor %}
+
+<script type="text/javascript">
+
+  if (!Date.prototype.toISOString) {
+    (function() {
+
+      function pad(number) {
+        if (number < 10) {
+          return '0' + number;
+        }
+        return number;
+      }
+
+      Date.prototype.toISOString = function() {
+        return this.getUTCFullYear() +
+          '-' + pad(this.getUTCMonth() + 1) +
+          '-' + pad(this.getUTCDate()) +
+          'T' + pad(this.getUTCHours()) +
+          ':' + pad(this.getUTCMinutes()) +
+          ':' + pad(this.getUTCSeconds()) +
+          '.' + (this.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+          'Z';
+      };
+
+    }());
+  }
+
+
+  $(document).ready(function() {
+      setdeadline();
+  });
+
+  function setdeadline() {
+    $('[name="deadline"]').val(moment(new Date()).format('YYYY-MM-DDTHH:mm'));
+  }
+
+</script>
+
+{% endblock %}

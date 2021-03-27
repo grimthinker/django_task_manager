@@ -1,0 +1,37 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Users list
+{% endblock %}
+
+{% block content %}
+<h3 class="mb-5">Вход</h3>
+<form class="mb-5" action="{% url 'login_page_url' %}" method="post">
+  {% csrf_token %}
+  <div class="form-group mb-3">
+    <label for="your_name">Имя: </label>
+  </div>
+  <div class="form-group mb-3">
+    <input id="your_name" type="text" name="username">
+  </div>
+  <div class="form-group mb-3">
+    <label for="your_name">Пароль: </label>
+  </div>
+  <div class="form-group mb-3">
+    <input id="your_name" type="password" name="password">
+  </div>
+  <button type="submit" class="btn btn-primary">Войти</button>
+</form>
+
+{% if messages %}
+  {% for message in messages %}
+    {{ message|safe }}
+  {% endfor %}
+{% endif %}
+
+<div class="mt-4">
+  <div>
+    Нет аккаунта? <a href="{% url 'register_page_url' %}" class="ml-2">Создать</a>
+  </div>
+</div>
+{% endblock %}

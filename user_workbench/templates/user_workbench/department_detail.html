@@ -1,0 +1,57 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Department {{ department.name }} detail
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-7">
+      <h3 class="mb-3">Описание отделения</h3>
+      <p class="mb-2">Наименование:</p>
+      <p class="form-control mb-4">{{ department.name }}</p>
+      <p class="mb-2">Глава отделения:</p>
+      <p class="form-control mb-4"><a href="{{ department.chief.get_absolute_url }}">{{department.chief}}</a></p>
+      <p class="mb-2">Описание:</p>
+      <p class="form-control mb-4" rows=6 col=24>{{ department.body }}</p>
+      {% if workers %}
+      <p class="mb-2">Работники:</p>
+      <div class="card mb-4">
+        <div class="card-body">
+          {% for worker in workers %}
+          <p><a href="{{ worker.get_absolute_url }}">{{ worker }}</a></p>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if sub_departments %}
+      <p class="mb-2">Подразделения:</p>
+      <div class="card mb-4">
+        <div class="card-body" style="background-color: {{COLOR_DIS}};">
+          {% for department in sub_departments %}
+            <p><a href="{{ department.get_absolute_url }}">{{ department }}</a> (гл. <a href="{{ department.chief.get_absolute_url }}">{{ department.chief }}</a>)</p>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      <p class="mb-2">Является частью подразделения:</p>
+      <p class="form-control mb-4"><a href="{{ department.super_department.get_absolute_url }}">{{ department.super_department }}</a></p>
+    </div>
+  </div>
+  <div class="row justify-content-center"">
+    <div class="col-4">
+      {% if current_user == department.chief or current_user.user.is_staff or current_user.chief %}
+        <a href="{% url 'department_edit_url' id=department.id %}" class="btn btn-primary">Редактировать подразделение</a>
+      {% endif %}
+    </div>
+    <div class="col-3">
+      {% if current_user.user.is_staff %}
+        <form action="{% url 'department_del_url' id=department.id %}">
+          <button class="btn btn-danger" type="submit">Удалить подразделение</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

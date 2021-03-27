@@ -1,0 +1,173 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Task {{ task.name }} detail
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+  <div class="row mb-2 mx-2">
+    <div class="col">
+      <h4>Информация о задаче</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-9">
+      <form class="mb-4" action="{{ task.get_absolute_url }}" method="post">
+        {% csrf_token %}
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-8">
+              <p class="mb-2">Наименование:</p>
+              {% if template_contains.name %}
+                <p class="mb-4">{{ form.name }}</p>
+              {% else %}
+                <p class="form-control mb-4" style="background-color: {{COLOR_DIS}};">{{ task.name }}</p>
+              {% endif %}
+              <p class="mb-2">Описание задачи:</p>
+              {% if template_contains.body %}
+                <p class="mb-4">{{ form.body }}</p>
+              {% else %}
+                <p class="form-control mb-4" style="background-color: {{COLOR_DIS}};" rows=9 col=24>{{ task.body }}</p>
+              {% endif %}
+              <p class="mb-2">Обоснование:</p>
+              {% if template_contains.justification %}
+                <p class="mb-4">{{ form.justification }}</p>
+              {% else %}
+                <p class="form-control mb-4" style="background-color: {{COLOR_DIS}};" rows=2 col=24>{{ task.justification }}</p>
+              {% endif %}
+              <div class="row">
+                <div class="col">
+                  <p class="mb-2">Срок исполнения:</p>
+                  <p class="form-control mb-4" id=current_deadline style="background-color: {{COLOR_DIS}};">{{ task.deadline|date:"d.m.Y H:i" }}</p>
+                </div>
+                <div class="col">
+                  {% if template_contains.show_time_remains %}
+                  <p class="mb-2">Осталось времени:</p>
+                  <p class="form-control mb-4" style="background-color: {{COLOR_DIS}};">{{ task.calc_elap_time }}</p>
+                  {% endif %}
+                </div>
+                {% if template_contains.deadline %}
+                <div class="col-5">
+                  <p class="mb-2">Выбрать иные сроки:</p>
+                  <p class="mb-4">
+                    {{ form.deadline }}
+                  </p>
+                </div>
+                {% endif %}
+              </div>
+              <p class="mb-2">Комментарий:</p>
+              <p>{{ form.comment }}</p>
+            </div>
+            <div class="col-4">
+              <p class="mb-2">Текущий статус задачи:</p>
+              {% if template_contains.status %}
+                <p class="mb-4">{{ form.status }}</p>
+              {% else %}
+                <p class="form-control mb-4" style="background-color: {{COLOR_DIS}};">{{ task.get_status_display }}</p>
+              {% endif %}
+              {% if task.closure_datetime %}
+                <p class="mb-2">Задача была закрыта:</p>
+                <p class="mb-4 form-control" style="background-color: {{COLOR_DIS}};">{{ task.closure_datetime|date:"d.m.Y H:i" }} ({{ task.get_status_display }})</p>
+              {% endif %}
+              <p class="mb-2">Ответственный за выполнение:</p>
+              <div class="card mb-4">
+                <div class="card-body" style="background-color: {{COLOR_DIS}};">
+                  {% for user in responsible_users %}
+                  <p>
+                    <a href="{{ user.get_absolute_url }}">
+                      {{ user }}
+                    </a>
+                  </p>
+                  {% endfor %}
+                </div>
+              </div>
+              {% if template_contains.responsible_users %}
+                <p class="mb-2">Выбрать ответственного заново:</p>
+                <p class="mb-3">{{ form.responsible_users }}</p>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="btn btn-primary">Принять изменения</button>
+                  </div>
+                  <div class="col">
+                    <a href="{{ task.get_absolute_url }}">
+                      Обновить
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-3">
+      <p class="mb-2">Задачу выдал:</p>
+      <p class="form-control mb-4" style="background-color: {{COLOR_DIS}};">
+        <a href="{{ task.author.get_absolute_url }}">
+          {{ task.author }}
+        </a>
+      </p>
+      <p class="mb-2">Дата создания:</p>
+      <p class="mb-4 form-control" style="background-color: {{COLOR_DIS}};">{{ task.creation_datetime|date:"d.m.Y H:i" }}</p>
+      {% if task.super_task %}
+      <p class="mb-2">Данная задача является подзадачей к задаче:</p>
+      <p class="mb-4 form-control" style="background-color: {{COLOR_DIS}};">
+        <a href="{{ task.super_task.get_absolute_url }}">
+          {{ task.super_task.name }}
+        </a>
+      </p>
+      {% endif %}
+      {% if sub_tasks %}
+        <p class="mb-2">Подзадачи:</p>
+        <div class="card mb-4">
+          <div class="card-body" style="background-color: {{COLOR_DIS}};">
+            {% for sub_task in sub_tasks %}
+            <p>
+              <a href="{{ sub_task.get_absolute_url }}">
+                {{ sub_task.name }} ({{ sub_task.get_status_display }})
+              </a>
+            </p>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <p class="mb-2">Подзадачи отсутствуют</p>
+      {% endif %}
+      {% if template_contains.subtasks %}
+        <form class="mb-5" action="{% url 'task_create_url' %}">
+          <input type="hidden" name="id" value="{{task.id}}">
+          <button type="submit" class="btn btn-primary">Добавить подзадачу</button>
+          <p class="mb-2">↑ При создании подзадачи статус текущей задачи автоматически сменится на "Есть незаконченные подзадачи"</p>
+        </form>
+      {% endif %}
+      {% if template_contains.delete_task %}
+        <form action="{% url 'task_del_url' id=task.id %}">
+          <button class="btn btn-danger" type="submit">Удалить задачу</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% for field in form %}
+{% if form.field.errors %}
+<div class="alert alert-danger">
+  {{ form.field.errors }}
+</div>
+{% endif %}
+{% endfor %}
+
+
+{% endblock %}

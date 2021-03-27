@@ -1,0 +1,70 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Tasks list
+{% endblock %}
+
+{% block content %}
+  <h3 class="mb-3">Напоминания</h3>
+  {% if overdue_tasks %}
+  <p class="mb-2">Есть просроченные задачи!</p>
+  <div class="card mb-4">
+    <div class="card-body">
+      {% for task in overdue_tasks %}
+      <p><a href="{{ task.get_absolute_url }}">{{ task }}</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% if less_than_day_tasks %}
+  <p class="mb-2">Осталось меньше одно дня:</p>
+  <div class="card mb-4">
+    <div class="card-body">
+      {% for task in less_than_day_tasks %}
+      <p><a href="{{ task.get_absolute_url }}">{{ task }}</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% if less_than_twodays_tasks %}
+  <p class="mb-2">Осталось меньше двух дней:</p>
+  <div class="card mb-4">
+    <div class="card-body">
+      {% for task in less_than_twodays_tasks %}
+      <p><a href="{{ task.get_absolute_url }}">{{ task }}</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% if less_than_week_tasks %}
+  <p class="mb-2">Осталось меньше недели:</p>
+  <div class="card mb-4">
+    <div class="card-body">
+      {% for task in less_than_week_tasks %}
+      <p><a href="{{ task.get_absolute_url }}">{{ task }}</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% if less_than_thirtydays_tasks %}
+  <p class="mb-2">Осталось меньше 30 дней:</p>
+  <div class="card mb-4">
+    <div class="card-body">
+      {% for task in less_than_thirtydays_tasks %}
+      <p><a href="{{ task.get_absolute_url }}">{{ task }}</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% if less_than_sixtydays_tasks %}
+  <p class="mb-2">Осталось меньше 60 дней:</p>
+  <div class="card mb-4">
+    <div class="card-body">
+      {% for task in less_than_sixtydays_tasks %}
+      <p><a href="{{ task.get_absolute_url }}">{{ task }}</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}

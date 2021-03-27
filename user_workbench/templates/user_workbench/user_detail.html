@@ -1,0 +1,37 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  User {{ username }} detail
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-center"">
+    <div class="col-7">
+      <h4 class="mb-2">Информация о пользователе {{profile.user}}:</h4>
+      <div class="form-control mb-5" style="background-color: rgba(241, 241, 244, 0.7);">
+        <p>ФИО: {{profile.second_name}} {{profile.name}} {{profile.middle_name}}</p>
+        {% if department %}
+          <p class="mb-2">Отделение: <a href="{{profile.department.get_absolute_url }}">{{department}}</a></p>
+        {% endif %}
+        {% if slave_department %}
+          <p class="mb-2">Глава отделения: <a href="{{profile.slave_department.get_absolute_url }}">{{slave_department}}</a></p>
+        {% endif %}
+      </div>
+
+      {% if edit_permition %}
+      <p>Изменить данные:</p>
+      <form class="" action="{{profile.id}}" method="post">
+        {% csrf_token %}
+        <p>ФИО: {{ form.second_name }} {{ form.name }} {{ form.middle_name }}</p>
+        <p>В отделении: {{ form.department }}</p>
+        {% if slave_department %}
+        <p>Изменить подчиненное отделение можно через редактирование отделения</p>
+        {% endif %}
+        <button type="submit" name="button">Принять изменения</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

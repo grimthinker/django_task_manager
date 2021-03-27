@@ -1,0 +1,48 @@
+{% extends 'user_workbench/base_workbench.html' %}
+
+{% block title %}
+  Department {{ department.name }} detail
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <form class="" action="{% url 'department_edit_url' id=department.id %}" method="post">
+    {% csrf_token %}
+    <div class="row justify-content-center">
+      <div class="col-7">
+        <h3 class="mb-3">Редактировать отделение:</h3>
+        <p class="mb-2">Наименование:</p>
+        {{ form.name }}
+        <p class="mb-2 mt-4">Глава отделения:</p>
+          {{ form.chief }}
+        <p class="mb-2 mt-4">Описание:</p>
+        {{ form.body }}
+        <p class="mb-2 mt-4">Работники:</p>
+        {{ form.workers }}
+        <p class="mb-2 mt-4">Является частью подразделения:</p>
+        {{ form.super_department }}
+        <p class="mb-2 mt-4">Внутренние подразделения:</p>
+        <div class="card mb-4">
+          <div class="card-body" style="background-color: {{COLOR_DIS}};">
+            {% for d in sub_departments %}
+              <p><a href="{{ d.get_absolute_url }}">{{ d }}</a></p>
+            {% endfor %}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Принять изменения</button>
+        <a href="{{ department.get_absolute_url }}" class="btn btn-primary">Отмена</a>
+      </div>
+    </div>
+  </form>
+  <div class="row justify-content-center">
+    <div class="col-7">
+      {% if current_user.user.is_staff %}
+        <form action="{% url 'department_del_url' id=department.id %}">
+          <button class="btn btn-danger" type="submit">Удалить подразделение</button>
+        </form>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
